@@ -1,3 +1,5 @@
+export const runtime = 'edge';
+
 import { fetchRequestHandler } from '@trpc/server/adapters/fetch';
 import { appRouter } from '@/lib/trpc/routers/_app';
 import { createContext } from '@/lib/trpc/context';

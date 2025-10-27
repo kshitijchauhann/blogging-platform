@@ -15,32 +15,38 @@ import { z } from 'zod';
 
 export const postsRouter = router({
   // Get all posts
-  getAll: publicProcedure
-    .input(
-      z.object({
-        status: z.enum(['draft', 'published']).optional(),
-        limit: z.number().min(1).max(100).default(50),
-        offset: z.number().min(0).default(0),
-      }).optional()
-    )
-    .query(async ({ ctx, input }) => {
-      const { status, limit = 50, offset = 0 } = input || {};
+ getAll: publicProcedure
+  .input(
+    z.object({
+      status: z.enum(['draft', 'published']).optional(),
+      limit: z.number().min(1).max(100).default(50),
+      offset: z.number().min(0).default(0),
+    }).optional()
+  )
+  .query(async ({ ctx, input }) => {
+    const { status, limit = 50, offset = 0 } = input || {};
 
-      const whereConditions = status
-        ? eq(postsTable.status, status)
-        : undefined;
+    const whereConditions = status
+      ? eq(postsTable.status, status)
+      : undefined;
 
-      const allPosts = await ctx.db
-        .select()
-        .from(postsTable)
-        .where(whereConditions)
-        .orderBy(desc(postsTable.createdAt))
-        .limit(limit)
-        .offset(offset);
+    // Use query builder with relations to include categories
+    const allPosts = await ctx.db.query.postsTable.findMany({
+      where: whereConditions,
+      orderBy: [desc(postsTable.createdAt)],
+      limit,
+      offset,
+      with: {
+        postCategories: {
+          with: {
+            category: true,
+          },
+        },
+      },
+    });
 
-      return allPosts;
-    }),
-
+    return allPosts;
+  }),
   // Get single post by ID
   getById: publicProcedure
     .input(z.number())

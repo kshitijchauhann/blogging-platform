@@ -51,7 +51,7 @@ export default function PostPage() {
     immediatelyRender: false,
     extensions: [
       StarterKit.configure({
-        horizontalRule: true,
+        horizontalRule: {}, // Changed from true to {}
       }),
       Underline,
       Link.configure({ 
@@ -114,7 +114,9 @@ export default function PostPage() {
       <Center minH="100vh">
         <Stack align="center" gap={4}>
           <Text fontSize="xl" color="gray.600">Post not found</Text>
-          <Button leftIcon={<MdArrowBack />} onClick={() => router.back()}>
+          <Button 
+            onClick={() => router.back()}>
+            <MdArrowBack />
             Go Back
           </Button>
         </Stack>

@@ -67,7 +67,6 @@ import { useCursorVisibility } from "@/hooks/use-cursor-visibility"
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss"
 
-import content from "@/components/tiptap-templates/simple/data/content.json"
 import { MdSave } from "react-icons/md"
 
 import { useCurrentEditor } from "@tiptap/react"
@@ -251,7 +250,6 @@ function SimpleEditor({ onDialogOpen, editorRef }: { onDialogOpen: () => void, e
       Subscript,
       Selection,
     ],
-    content,
   })
 
   // Expose editor to parent via ref

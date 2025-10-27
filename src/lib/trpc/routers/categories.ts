@@ -187,20 +187,20 @@ export const categoriesRouter = router({
         });
       }
 
-      // // Check if category is used in posts
-      // const postCount = await ctx.db
-      //   .select({ count: sql<number>`count(*)` })
-      //   .from(postCategories)
-      //   .where(eq(postCategories.categoryId, input.id));
-      //
-      // const count = Number(postCount[0].count);
-      //
-      // if (count > 0) {
-      //   throw new TRPCError({
-      //     code: 'PRECONDITION_FAILED',
-      //     message: `Cannot delete category. It is assigned to ${count} post(s). Remove the category from all posts first.`,
-      //   });
-      // }
+      // Check if category is used in posts
+      const postCount = await ctx.db
+        .select({ count: sql<number>`count(*)` })
+        .from(postCategories)
+        .where(eq(postCategories.categoryId, input.id));
+
+      const count = Number(postCount[0].count);
+
+      if (count > 0) {
+        throw new TRPCError({
+          code: 'PRECONDITION_FAILED',
+          message: `Cannot delete category. It is assigned to ${count} post(s). Remove the category from all posts first.`,
+        });
+      }
 
       // Delete category (relationships are already cascade deleted in schema)
       await ctx.db
